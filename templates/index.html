@@ -3,15 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
 <div class="search-container">
-    <form action="/action_page.php">
+    <form>
       <input type="text" placeholder="Search.." name="search">
-      <button type="submit">Submit</button>
+        <ul id="suggestion"></ul>
+
     </form>
 </div>
+
+<script>
+    $("[name=search]").keyup(function(e){
+    var val = $(this).val();
+    if(val.length>=1){
+    $('#suggestion').empty();
+    $.get('http://localhost:5000/search?q='+$(this).val(),function(response){
+    $.each(response, function(i, v){
+
+    if(typeof v.line2 === 'undefined') {
+    $("#suggestion").append("<li>"+v.line1+","+v.city+","+v.state+"</li>");
+    } else {
+    $("#suggestion").append("<li>"+v.line1+","+v.line2+","+v.city+","+v.state+"</li>");
+    }
+
+    });
+    });
+    }
+    });
+</script>
 
 </body>
 </html>
